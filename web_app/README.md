@@ -4,55 +4,57 @@ A web-based application for visualizing and managing health facilities using an 
 
 ## Features
 
-- Interactive map interface using Leaflet.js
-- Display of health facilities with detailed information
-- Filtering facilities by type
-- Responsive design for all devices
+- Interactive map interface using Leaflet.js with marker clustering
+- Real-time location tracking and distance calculation
+- Advanced filtering by facility type, location, and services
+- User authentication and profile management
+- Comprehensive facility information including:
+  - Detailed facility descriptions
+  - Contact information
+  - Service listings
+  - Operating hours
+  - Location coordinates
+- Responsive design optimized for all devices
 - PostgreSQL integration with GIS support
+- Data import from CSV files
+- Secure user authentication
 
-## Prerequisites
+## Frontend Technologies
+
+- HTML5
+- CSS3
+- JavaScript
+- Bootstrap 5
+- Leaflet.js
+- Leaflet.markercluster
+- Font Awesome
+
+## Backend Technologies
 
 - Python 3.8+
-- PostgreSQL with PostGIS extension
-- pip (Python package manager)
+- Flask
+- SQLAlchemy
+- PostgreSQL with PostGIS
+- Flask-Login
+- Flask-SQLAlchemy
+- GeoAlchemy2
+- pandas
 
-## Installation
+## Security Features
 
-1. Create and activate a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Linux/Mac
-```
+- Password hashing using Werkzeug
+- Secure session management
+- CSRF protection
+- Input validation
+- SQL injection prevention
 
-2. Install the required packages:
-```bash
-pip install -r requirements.txt
-```
+## License
 
-3. Configure the database:
-- Database name: afyalink_db
-- Username: kevin
-- Password: admin
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-4. Run the application:
-```bash
-python app.py
-```
+## Acknowledgments
 
-5. Access the application at: http://localhost:5000
-
-## Project Structure
-
-```
-web_app/
-├── app.py              # Main Flask application
-├── requirements.txt    # Python dependencies
-├── static/            # Static files (CSS, JS)
-│   ├── css/
-│   │   └── style.css
-│   └── js/
-│       └── map.js
-├── templates/         # HTML templates
-│   └── index.html
-└── README.md         # Project documentation
-```
+- Leaflet.js for the interactive map interface
+- Bootstrap for responsive design
+- PostgreSQL and PostGIS for geospatial data management
+- Flask for the web framework
