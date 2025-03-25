@@ -1,0 +1,58 @@
+/* About Page Styles */
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(13, 110, 253, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+}
+
+.timeline .card {
+    position: relative;
+    border-left: 3px solid var(--primary-color);
+}
+
+.timeline .card::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 50%;
+    width: 13px;
+    height: 13px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    transform: translateY(-50%);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2.5rem;
+    }
+
+    .lead {
+        font-size: 1.1rem;
+    }
+
+    .timeline .card {
+        margin-left: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .display-4 {
+        font-size: 2rem;
+    }
+
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    .feature-icon {
+        width: 50px;
+        height: 50px;
+    }
+}

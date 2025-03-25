@@ -1,10 +1,76 @@
-// Initialize the map
-let map = L.map('map').setView([-1.2921, 36.8219], 12);
-
-// Add OpenStreetMap tiles
+// Initialize map and location service
+const map = L.map('map').setView([-1.2921, 36.8219], 12);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: ' OpenStreetMap contributors'
 }).addTo(map);
+
+// Initialize marker cluster group
+const markerCluster = L.markerClusterGroup();
+map.addLayer(markerCluster);
+
+const locationService = new LocationService(map);
+let isTrackingLocation = false;
+
+// Toggle location tracking
+function toggleLocationTracking() {
+    const button = document.querySelector('[title="Your Location"]');
+    if (isTrackingLocation) {
+        locationService.stopTracking();
+        button.classList.remove('active');
+    } else {
+        locationService.startTracking();
+        button.classList.add('active');
+    }
+    isTrackingLocation = !isTrackingLocation;
+}
+
+// Listen for location updates
+document.addEventListener('userLocationUpdated', function(e) {
+    const { latitude, longitude } = e.detail;
+    updateDistances(latitude, longitude);
+});
+
+// Update distances when user location changes
+function updateDistances(userLat, userLon) {
+    const items = document.querySelectorAll('#facilityList .facility-card');
+    items.forEach(item => {
+        const lat = parseFloat(item.dataset.latitude);
+        const lon = parseFloat(item.dataset.longitude);
+        const distance = locationService.calculateDistance(userLat, userLon, lat, lon);
+        const distanceEl = item.querySelector('.distance');
+        if (distanceEl) {
+            distanceEl.textContent = `${distance.toFixed(1)} km away`;
+        }
+    });
+
+    // Update sort if sorting by distance
+    if (document.getElementById('sortBy').value === 'distance') {
+        filterFacilities();
+    }
+}
+
+// Sort facilities
+function sortFacilities(by) {
+    const facilityList = document.getElementById('facilityList');
+    const items = Array.from(facilityList.children);
+
+    items.sort((a, b) => {
+        switch(by) {
+            case 'name':
+                return a.querySelector('h6').textContent.localeCompare(b.querySelector('h6').textContent);
+            case 'type':
+                return a.querySelector('.facility-type').textContent.localeCompare(b.querySelector('.facility-type').textContent);
+            case 'distance':
+                const distA = parseFloat(a.querySelector('.distance').textContent) || Infinity;
+                const distB = parseFloat(b.querySelector('.distance').textContent) || Infinity;
+                return distA - distB;
+            default:
+                return 0;
+        }
+    });
+
+    items.forEach(item => facilityList.appendChild(item));
+}
 
 // Custom icons for different facility types
 const facilityIcons = {
@@ -34,7 +100,6 @@ const facilityIcons = {
 let markers = [];
 let facilities = [];
 let currentLocation = null;
-let markerCluster = L.markerClusterGroup();
 
 // Fetch facilities from API
 async function fetchFacilities() {
@@ -76,10 +141,10 @@ function displayFacilities(facilities) {
             map.setView([facility.latitude, facility.longitude], 16);
             marker.openPopup();
         });
+        facilityElement.querySelector('.facility-card').dataset.latitude = facility.latitude;
+        facilityElement.querySelector('.facility-card').dataset.longitude = facility.longitude;
         document.getElementById('facilityList').appendChild(facilityElement);
     });
-
-    map.addLayer(markerCluster);
 }
 
 // Create popup content
@@ -105,6 +170,7 @@ function createFacilityCard(facility) {
                 <span class="badge bg-primary">${getFacilityTypeName(facility.facility_type)}</span>
                 <p class="card-text small mt-2 mb-1">${facility.address}</p>
                 <p class="card-text small text-muted">${facility.services}</p>
+                <p class="distance"></p>
             </div>
         </div>
     `;
@@ -142,8 +208,8 @@ function filterFacilities() {
         } else if (sortBy === 'type') {
             return a.facility_type.localeCompare(b.facility_type);
         } else if (sortBy === 'distance' && currentLocation) {
-            const distA = getDistance(currentLocation, [a.latitude, a.longitude]);
-            const distB = getDistance(currentLocation, [b.latitude, b.longitude]);
+            const distA = locationService.calculateDistance(currentLocation[0], currentLocation[1], a.latitude, a.longitude);
+            const distB = locationService.calculateDistance(currentLocation[0], currentLocation[1], b.latitude, b.longitude);
             return distA - distB;
         }
         return 0;
@@ -170,11 +236,6 @@ function getUserLocation() {
             map.setView(currentLocation, 14);
         });
     }
-}
-
-// Calculate distance between two points
-function getDistance(point1, point2) {
-    return map.distance(point1, point2);
 }
 
 // Event listeners

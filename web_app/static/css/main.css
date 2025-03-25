@@ -1,0 +1,72 @@
+/* Base */
+@import 'base.css';
+
+/* Components */
+@import 'components/buttons.css';
+@import 'components/cards.css';
+@import 'components/forms.css';
+@import 'components/navigation.css';
+
+/* Pages */
+@import 'pages/auth.css';
+@import 'pages/profile.css';
+@import 'pages/dashboard.css';
+@import 'pages/about.css';
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .sidebar {
+        height: auto;
+        max-height: 50vh;
+    }
+    
+    .map-container {
+        height: 50vh;
+    }
+    
+    .auth-card {
+        margin: 1rem;
+    }
+
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+
+    .navbar-brand img {
+        height: 25px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-content {
+        padding: 2rem 1rem;
+    }
+    
+    .auth-card {
+        margin: 0.5rem;
+    }
+    
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .profile-avatar i {
+        font-size: 60px;
+    }
+
+    .navbar .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .container {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+}

@@ -1,0 +1,37 @@
+/* Card Styles */
+.card {
+    border: none;
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--border-radius);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    color: var(--dark-color);
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Facility Cards */
+.facility-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: var(--shadow-sm);
+}
+
+.facility-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.facility-type-1 { border-left: 4px solid var(--danger-color); }
+.facility-type-3 { border-left: 4px solid var(--success-color); }
+.facility-type-4 { border-left: 4px solid var(--primary-color); }

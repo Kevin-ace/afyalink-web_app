@@ -1,0 +1,298 @@
+/* Dashboard Layout */
+.sidebar {
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+    background: white;
+    box-shadow: var(--shadow-sm);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.map-container {
+    height: calc(100vh - 56px);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+    border-radius: var(--border-radius);
+}
+
+/* Search Controls */
+.search-box {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.search-box input {
+    padding-right: 40px;
+}
+
+.search-box .search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--secondary-color);
+}
+
+/* Facility List */
+.facility-list {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary-color) var(--light-color);
+}
+
+.facility-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.facility-list::-webkit-scrollbar-track {
+    background: var(--light-color);
+    border-radius: 3px;
+}
+
+.facility-list::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 3px;
+}
+
+/* Facility Cards */
+.facility-card {
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+
+.facility-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.facility-card .facility-type {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+
+.facility-card .facility-distance {
+    font-size: 0.875rem;
+    color: var(--secondary-color);
+}
+
+/* Map Controls */
+.map-controls {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.map-control-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: none;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.map-control-btn:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+}
+
+/* Facility Markers */
+.facility-marker {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: white;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.facility-marker:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-md);
+}
+
+.facility-marker.hospital { background: var(--danger-color); }
+.facility-marker.health-center { background: var(--success-color); }
+.facility-marker.dispensary { background: var(--primary-color); }
+
+.facility-marker i {
+    color: white;
+    font-size: 16px;
+}
+
+/* User Location Styles */
+.user-location-marker {
+    position: relative;
+}
+
+.user-location-dot {
+    width: 20px;
+    height: 20px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px var(--primary-color);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+    }
+}
+
+.location-btn {
+    transition: all 0.3s ease;
+}
+
+.location-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.location-btn.active:hover {
+    background-color: #0b5ed7;
+}
+
+/* Facility Popup Styles */
+.facility-popup {
+    padding: 0.5rem;
+}
+
+.facility-popup h5 {
+    margin-bottom: 0.5rem;
+    color: var(--dark-color);
+}
+
+.facility-popup p {
+    font-size: 0.875rem;
+    color: var(--secondary-color);
+}
+
+.facility-popup i {
+    width: 1.25rem;
+    text-align: center;
+}
+
+.facility-distance {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background-color: rgba(13, 110, 253, 0.1);
+    color: var(--primary-color);
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 991.98px) {
+    .sidebar {
+        height: auto;
+        max-height: 40vh;
+        overflow-y: auto;
+        margin-bottom: 1rem;
+    }
+
+    .map-container {
+        height: calc(60vh - 56px);
+    }
+
+    .facility-list {
+        max-height: calc(40vh - 120px);
+    }
+
+    .search-box {
+        position: sticky;
+        top: 0;
+        background: white;
+        padding: 1rem;
+        z-index: 1000;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .sidebar {
+        max-height: 50vh;
+    }
+
+    .map-container {
+        height: 50vh;
+    }
+
+    .facility-list {
+        max-height: calc(50vh - 120px);
+    }
+
+    .map-controls {
+        top: auto;
+        bottom: 1rem;
+        flex-direction: row;
+    }
+
+    .facility-card {
+        margin-bottom: 0.5rem;
+    }
+
+    .facility-card .card-body {
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .sidebar {
+        max-height: 60vh;
+    }
+
+    .map-container {
+        height: 40vh;
+    }
+
+    .facility-list {
+        max-height: calc(60vh - 100px);
+    }
+
+    .map-control-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    .facility-marker {
+        width: 32px;
+        height: 32px;
+    }
+
+    .facility-marker i {
+        font-size: 14px;
+    }
+}

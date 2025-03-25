@@ -1,0 +1,74 @@
+/* Navigation Styles */
+.navbar {
+    padding: 1rem 0;
+    box-shadow: var(--shadow-sm);
+}
+
+.navbar-brand img {
+    height: 30px;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover img {
+    transform: scale(1.05);
+}
+
+.nav-link {
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+}
+
+/* Dropdown Menu */
+.navbar .dropdown-menu {
+    border: none;
+    box-shadow: var(--shadow-md);
+    border-radius: var(--border-radius);
+    padding: 0.5rem 0;
+}
+
+.navbar .dropdown-item {
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.navbar .dropdown-item:active {
+    background-color: var(--primary-color);
+}
+
+.navbar .dropdown-item i {
+    width: 1.25rem;
+    color: var(--secondary-color);
+}
+
+.dropdown-item:hover i {
+    color: inherit;
+}
+
+/* Map Controls */
+.map-controls {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.map-control-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: none;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.map-control-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}

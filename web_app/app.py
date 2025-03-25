@@ -30,9 +30,9 @@ class User(UserMixin, db.Model):
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return db.session.get(User, int(user_id))
 
-class HealthFacility(db.Model):
+class Facility(db.Model):
     __tablename__ = 'health_facilities'
     
     id = db.Column(db.Integer, primary_key=True)
@@ -57,13 +57,13 @@ def load_facilities_from_csv():
         db.create_all()
         
         # Check if data already exists
-        if HealthFacility.query.first() is None:
+        if Facility.query.first() is None:
             # Read CSV file
             df = pd.read_csv('Health_Facilities.csv')
             
             # Insert data into database
             for _, row in df.iterrows():
-                facility = HealthFacility(
+                facility = Facility(
                     facility_number=str(row['Facility Number']),
                     facility_name=row['Facility Name'],
                     hmis=str(row['HMIS']),
@@ -90,12 +90,27 @@ def index():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    # Get facilities from the database and convert to dict
+    facilities = [{
+        'id': f.id,
+        'name': f.facility_name,
+        'latitude': float(f.latitude) if f.latitude else None,  
+        'longitude': float(f.longitude) if f.longitude else None,  
+        'county': f.district,
+        'contact': f.hmis,
+        'facility_type': f.facility_type
+    } for f in Facility.query.all() if f.latitude and f.longitude]  
+    return render_template('dashboard.html', facilities=facilities)
+
+@app.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html', user=current_user)
 
 @app.route('/api/facilities')
 @login_required
 def get_facilities():
-    facilities = HealthFacility.query.all()
+    facilities = Facility.query.all()
     return jsonify([{
         'id': f.id,
         'name': f.facility_name,
@@ -107,6 +122,10 @@ def get_facilities():
         'services': f.assigned_service,
         'insurance': f.assigned_insurance
     } for f in facilities])
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -141,21 +160,23 @@ def signup():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        remember = True if request.form.get('remember') else False
+        remember = request.form.get('remember', False)
         
         user = User.query.filter_by(username=username).first()
-        
-        if not user or not user.check_password(password):
-            flash('Please check your login details and try again.', 'error')
-            return redirect(url_for('login'))
-            
-        login_user(user, remember=remember)
-        return redirect(url_for('dashboard'))
+        if user and user.check_password(password):
+            login_user(user, remember=remember)
+            next_page = request.args.get('next')
+            return redirect(next_page or url_for('dashboard'))
+        else:
+            flash('Invalid username or password', 'error')
     
-    return render_template('auth.html', mode='login')
+    return render_template('auth.html', action='login')
 
 @app.route('/logout')
 @login_required
