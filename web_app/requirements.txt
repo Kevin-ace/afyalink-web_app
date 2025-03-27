@@ -9,3 +9,6 @@ Werkzeug==3.0.1
 GeoAlchemy2==0.14.1
 shapely==2.0.1
 pandas
+streamlit 
+qrcode[pil] 
+pillow

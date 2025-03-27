@@ -1,0 +1,1 @@
+This project is designed to process and analyze  data from various CSV files. The main script, `squash_cvs.py`, consolidates and processes data from multiple sources to provide meaningful insights.
