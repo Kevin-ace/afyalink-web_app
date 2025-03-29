@@ -206,9 +206,15 @@
         // Password visibility toggle
         document.querySelectorAll('.password-toggle').forEach(toggle => {
             toggle.addEventListener('click', function() {
-                const input = this.previousElementSibling;
+                // Find the input within the same parent container
+                const passwordField = this.closest('.password-field');
+                const input = passwordField.querySelector('input');
+                
+                // Toggle between password and text
                 const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
                 input.setAttribute('type', type);
+                
+                // Toggle the icon
                 this.classList.toggle('fa-eye');
                 this.classList.toggle('fa-eye-slash');
             });
