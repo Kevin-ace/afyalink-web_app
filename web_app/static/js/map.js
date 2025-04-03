@@ -105,8 +105,17 @@ let currentLocation = null;
 async function fetchFacilities() {
     try {
         const response = await fetch('/api/facilities');
-        facilities = await response.json();
-        displayFacilities(facilities);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (Array.isArray(data)) {
+            facilities = data.filter(f => f.latitude && f.longitude);
+            displayFacilities(facilities);
+            console.log(`Loaded ${facilities.length} facilities with valid coordinates`);
+        } else {
+            console.error('Invalid facilities data format');
+        }
     } catch (error) {
         console.error('Error fetching facilities:', error);
     }
@@ -114,6 +123,12 @@ async function fetchFacilities() {
 
 // Display facilities on map and in list
 function displayFacilities(facilities) {
+    if (!Array.isArray(facilities) || facilities.length === 0) {
+        console.warn('No facilities to display');
+        document.getElementById('facilityList').innerHTML = '<div class="no-facilities">No facilities found</div>';
+        return;
+    }
+
     // Clear existing markers and list
     markerCluster.clearLayers();
     markers = [];
