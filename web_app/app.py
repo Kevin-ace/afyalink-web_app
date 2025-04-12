@@ -49,6 +49,8 @@ def create_app(config_class=Config):
 
     # Register blueprints
     app.register_blueprint(auth)
+    app.register_blueprint(admin)
+    app.register_blueprint(appointments)
 
     # Setup logging
     setup_logging(app)
