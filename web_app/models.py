@@ -10,13 +10,18 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(256))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    is_admin = db.Column(db.Boolean, default=False)
+    appointments = db.relationship('Appointment', backref='patient', lazy=True)
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
         
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+    
+    def is_administrator(self):
+        return self.is_admin
 
 class Facility(db.Model):
     __tablename__ = 'health_facilities'
@@ -85,3 +90,36 @@ class Facility(db.Model):
             cls.latitude.isnot(None),
             cls.longitude.isnot(None)
         ).all()
+
+
+class Appointment(db.Model):
+    __tablename__ = 'appointments'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    facility_id = db.Column(db.Integer, db.ForeignKey('health_facilities.id'), nullable=False)
+    appointment_date = db.Column(db.DateTime, nullable=False)
+    status = db.Column(db.String(20), default='pending')  # pending, approved, declined, rescheduled
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    patient_info_id = db.Column(db.Integer, db.ForeignKey('patient_info.id'), nullable=False)
+    
+    facility = db.relationship('Facility', backref='appointments')
+    patient_info = db.relationship('PatientInfo', backref='appointment', uselist=False)
+
+class PatientInfo(db.Model):
+    __tablename__ = 'patient_info'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    full_name = db.Column(db.String(255), nullable=False)
+    date_of_birth = db.Column(db.Date, nullable=False)
+    gender = db.Column(db.String(10), nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False)
+    address = db.Column(db.String(255), nullable=False)
+    emergency_contact_name = db.Column(db.String(255), nullable=False)
+    emergency_contact_phone = db.Column(db.String(20), nullable=False)
+    medical_history = db.Column(db.Text)
+    current_medications = db.Column(db.Text)
+    allergies = db.Column(db.Text)
+    chief_complaint = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)

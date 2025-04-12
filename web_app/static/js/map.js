@@ -260,3 +260,79 @@ document.getElementById('sortBy').addEventListener('change', filterFacilities);
 
 // Initialize
 fetchFacilities();
+
+
+function createFacilityPopup(facility) {
+    const popupContent = `
+        <div class="facility-popup">
+            <h3>${facility.name}</h3>
+            <p><strong>Type:</strong> ${facility.facility_type}</p>
+            <p><strong>Location:</strong> ${facility.address}</p>
+            <p><strong>Contact:</strong> ${facility.contact}</p>
+            <button class="btn btn-primary" onclick="showBookingForm(${facility.id})">Book Appointment</button>
+        </div>
+    `;
+    return popupContent;
+}
+
+function showBookingForm(facilityId) {
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.innerHTML = `
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Book Appointment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="appointmentForm" onsubmit="submitAppointment(event, ${facilityId})">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Full Name</label>
+                                <input type="text" class="form-control" name="full_name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Date of Birth</label>
+                                <input type="date" class="form-control" name="date_of_birth" required>
+                            </div>
+                        </div>
+                        <!-- Add all other form fields -->
+                        <div class="mb-3">
+                            <label>Appointment Date & Time</label>
+                            <input type="datetime-local" class="form-control" name="appointment_date" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    new bootstrap.Modal(modal).show();
+}
+
+function submitAppointment(event, facilityId) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    formData.append('facility_id', facilityId);
+    
+    fetch('/book-appointment', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Appointment booked successfully');
+            bootstrap.Modal.getInstance(form.closest('.modal')).hide();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        alert('Error booking appointment');
+        console.error(error);
+    });
+}
